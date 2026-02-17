@@ -4,7 +4,7 @@
 echo "Enter input filename: ";
 $filename = trim(fgets(STDIN));
 
-// Check file exists
+// Check if file exists
 if (!file_exists($filename)) {
     echo "Error: File not found.\n";
     exit(1);
@@ -13,23 +13,23 @@ if (!file_exists($filename)) {
 // Read file contents
 $code = file_get_contents($filename);
 
-// Block comment check
-$open_count = substr_count($code, "/*");
-$close_count = substr_count($code, "*/");
+// Remove single-line comments
+$code_no_line_comments = preg_replace('#//.*#', '', $code);
+
+// Check block comment counts
+$open_count = substr_count($code_no_line_comments, "/*");
+$close_count = substr_count($code_no_line_comments, "*/");
 
 if ($open_count != $close_count) {
     echo "Error: Invalid block comment detected.\n";
 }
 
 // Remove block comments
-$code = preg_replace('#/\*[\s\S]*?\*/#', '', $code);
+$code_clean = preg_replace('#/\*[\s\S]*?\*/#', '', $code_no_line_comments);
 
-// Remove single-line comments
-$code = preg_replace('#//.*#', '', $code);
-
-// Write output file
+// Write output
 $outname = pathinfo($filename, PATHINFO_FILENAME) . "_no_comments.c";
-file_put_contents($outname, $code);
+file_put_contents($outname, $code_clean);
 
 echo "Comments removed. Output written to $outname\n";
 ?>
