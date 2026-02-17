@@ -21,7 +21,6 @@ $codeNoComments = preg_replace('#/\*[\s\S]*?\*/#', '', $codeNoLineComments);
 
 // If "/*" still exists = unclosed comment
 $offset = 0;
-
 while (($pos = strpos($codeNoComments, "*/", $offset)) !== false) {
     $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 1;
     echo "Error: Stray */ detected at line $line.\n";
@@ -30,7 +29,6 @@ while (($pos = strpos($codeNoComments, "*/", $offset)) !== false) {
 
 // If "*/" still exists = stray closing
 $offset = 0;
-
 while (($pos = strpos($codeNoComments, "/*", $offset)) !== false) {
     $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 1;
     echo "Error: Unclosed /* detected at line $line.\n";
