@@ -23,7 +23,7 @@ $codeNoComments = preg_replace('#/\*[\s\S]*?\*/#', '', $codeNoLineComments);
 $offset = 0;
 
 while (($pos = strpos($codeNoComments, "*/", $offset)) !== false) {
-    $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 2; // +2 because line numbers start at 1 and we want to point to the line after "*/"
+    $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 1;
     echo "Error: Stray */ detected at line $line.\n";
     $offset = $pos + 2; // Move past the "*/" to find any additional occurrences
 }
@@ -32,7 +32,7 @@ while (($pos = strpos($codeNoComments, "*/", $offset)) !== false) {
 $offset = 0;
 
 while (($pos = strpos($codeNoComments, "/*", $offset)) !== false) {
-    $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 2;
+    $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 1;
     echo "Error: Unclosed /* detected at line $line.\n";
     $offset = $pos + 2;
 }
