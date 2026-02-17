@@ -2,34 +2,35 @@
 
 // Read input from user
 echo "Enter input filename: ";
-$filename = trim(fgets(STDIN));
+$fileName = trim(fgets(STDIN));
 
 // Check if file exists
-if (!file_exists($filename)) {
+if (!file_exists($fileName)) {
     echo "Error: File not found.\n";
     exit(1);
 }
 
 // Read file contents
-$code = file_get_contents($filename);
+$code = file_get_contents($fileName);
 
 // Remove single-line comments
-$code_no_line_comments = preg_replace('#//.*#', '', $code);
+$codeNoLineComments = preg_replace('#//.*#', '', $code);
 
 // Check block comment counts
-$open_count = substr_count($code_no_line_comments, "/*");
-$close_count = substr_count($code_no_line_comments, "*/");
+$openCount = substr_count($codeNoLineComments, "/*");
+$closeCount = substr_count($codeNoLineComments, "*/");
 
-if ($open_count != $close_count) {
+if ($openCount != $closeCount) {
     echo "Error: Invalid block comment detected.\n";
 }
 
 // Remove block comments
-$code_clean = preg_replace('#/\*[\s\S]*?\*/#', '', $code_no_line_comments);
+$codeClean = preg_replace('#/\*[\s\S]*?\*/#', '', $codeNoLineComments);
 
 // Write output
-$outname = pathinfo($filename, PATHINFO_FILENAME) . "_no_comments.c";
-file_put_contents($outname, $code_clean);
+$outName = pathinfo($fileName, PATHINFO_FILENAME) . "_no_comments.c";
+file_put_contents($outName, $codeClean);
 
-echo "Comments removed. Output written to $outname\n";
+echo "Comments removed. Output written to $outName\n";
+
 ?>
