@@ -1,6 +1,6 @@
 <?php
 
-//Read input from user
+// Read input from user
 echo "Enter input filename: ";
 $fileName = trim(fgets(STDIN));
 
@@ -19,10 +19,27 @@ $codeNoLineComments = preg_replace('#//.*#', '', $code);
 // Remove block comments
 $codeNoComments = preg_replace('#/\*[\s\S]*?\*/#', '', $codeNoLineComments);
 
+// If "/*" still exists = unclosed comment
+$offset = 0;
+
+while (($pos = strpos($codeNoComments, "*/", $offset)) !== false) {
+    $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 2; // +2 because line numbers start at 1 and we want to point to the line after "*/"
+    echo "Error: Stray */ detected at line $line.\n";
+    $offset = $pos + 2; // Move past the "*/" to find any additional occurrences
+}
+
+// If "*/" still exists = stray closing
+$offset = 0;
+
+while (($pos = strpos($codeNoComments, "/*", $offset)) !== false) {
+    $line = substr_count(substr($codeNoComments, 0, $pos), "\n") + 2;
+    echo "Error: Unclosed /* detected at line $line.\n";
+    $offset = $pos + 2;
+}
+
 // Write output
-$fileName = pathinfo($fileName, PATHINFO_FILENAME) . "_no_comments.c";
-file_put_contents($fileName, $codeNoComments);
+$outFileName = pathinfo($fileName, PATHINFO_FILENAME) . "_no_comments.c";
+file_put_contents($outFileName, $codeNoComments);
 
-echo "Comments removed. Output written to $fileName\n";
-
+echo "Comments removed where possible. Output written to $outFileName\n";
 ?>
